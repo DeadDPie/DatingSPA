@@ -26,17 +26,17 @@
     <!-- Sidebar for Mobile -->
     <v-navigation-drawer v-model="sidebar" app temporary>
       <v-list>
-        <v-col >
-        <v-list-item
-          v-for="item in menuItems"
-          :key="item.title"
-          :to="item.path"
-          variant="text"
-        >
-          <v-icon start>{{ item.icon }}</v-icon>
-          {{ item.title }}
-        </v-list-item>
-      </v-col>
+        <v-col>
+          <v-list-item
+            v-for="item in menuItems"
+            :key="item.title"
+            :to="item.path"
+            variant="text"
+          >
+            <v-icon start>{{ item.icon }}</v-icon>
+            {{ item.title }}
+          </v-list-item>
+        </v-col>
       </v-list>
     </v-navigation-drawer>
 
@@ -50,44 +50,7 @@
 </template>
 
 <script>
-import {
-  VApp,
-  VAppBar,
-  VAppBarNavIcon,
-  VToolbarTitle,
-  VSpacer,
-  VNavigationDrawer,
-  VList,
-  VListItem,
-  // VListItemIcon,
-  // VListItemContent,
-  VListItemTitle,
-  VMain,
-  VContainer,
-  VIcon,
-  VBtn,
-  VRow,
-} from "vuetify/components";
-
 export default {
-  components: {
-    VApp,
-    VAppBar,
-    VAppBarNavIcon,
-    VToolbarTitle,
-    VSpacer,
-    VNavigationDrawer,
-    VList,
-    VListItem,
-    // VListItemIcon,
-    // VListItemContent,
-    VListItemTitle,
-    VMain,
-    VContainer,
-    VIcon,
-    VBtn,
-    VRow,
-  },
   data() {
     return {
       appTitle: "Awesome App",

@@ -53,8 +53,7 @@ export default {
   methods: {
     login() {
       if (this.$refs.form.validate()) {
-        // Обработка логики авторизации
-        alert(`Вход с email: ${this.email}, пароль: ${this.password}`);
+        alert(`htubcnhfwbz с email: ${this.email}, пароль: ${this.password}`);
       }
     },
   },
