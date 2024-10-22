@@ -41,12 +41,12 @@
 export default {
   data() {
     return {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       valid: false,
       rules: {
-        required: (v) => !!v || 'Поле обязательно',
-        email: (v) => /.+@.+\..+/.test(v) || 'Введите корректный email',
+        required: (v) => !!v || "Поле обязательно",
+        email: (v) => /.+@.+\..+/.test(v) || "Введите корректный email",
       },
     };
   },
