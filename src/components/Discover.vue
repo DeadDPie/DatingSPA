@@ -29,6 +29,9 @@
             </v-btn>
           </v-card-actions>
         </v-card>
+        <div v-if="noMoreUsers" class="text-center">
+          <h3>На сегодня пользователи закончились</h3>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -43,6 +46,7 @@ export default {
       currentProfile: null,
       currentProfileIndex: 0,
       api: api,
+      noMoreUsers: false,
     };
   },
   methods: {
@@ -52,10 +56,16 @@ export default {
     like() {
       this.currentProfileIndex += 1;
       this.currentProfile = this.profileList[this.currentProfileIndex];
+      if (this.currentProfileIndex >= this.profileList.length) {
+        this.noMoreUsers = true;
+      }
     },
     dislike() {
       this.currentProfileIndex += 1;
       this.currentProfile = this.profileList[this.currentProfileIndex];
+      if (this.currentProfileIndex >= this.profileList.length) {
+        this.noMoreUsers = true;
+      }
     },
     async fetchUsers() {
       try {
