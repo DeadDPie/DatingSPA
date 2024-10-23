@@ -1,6 +1,6 @@
 <template>
   <v-container class="d-flex justify-center align-center fill-height">
-    <v-card class="pa-5" max-width="900">
+    <v-card class="pa-5" width="600" max-width="100%">
       <v-card-title class="text-center">Регистрация</v-card-title>
 
       <v-card-text>
@@ -28,7 +28,7 @@
             type="text"
             required
           />
-          <v-text-field
+          <v-textarea
             v-model="description"
             :rules="[rules.required]"
             label="Описание"
