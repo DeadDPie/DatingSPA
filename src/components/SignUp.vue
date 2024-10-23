@@ -4,7 +4,7 @@
       <v-card-title class="text-center">Регистрация</v-card-title>
 
       <v-card-text>
-        <v-form ref="form" v-model="valid" lazy-validation>
+        <v-form ref="form" v-model="isFormValid" lazy-validation>
           <v-text-field
             v-model="email"
             :rules="[rules.required, rules.email]"
@@ -37,7 +37,7 @@
           />
           <v-text-field
             v-model="age"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.age]"
             label="Возраст"
             type="text"
             inputmode="numeric"
@@ -56,13 +56,20 @@
 
           <v-file-input
             v-model="profile_image"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.requiredFile]"
             label="Изображение профиля"
             placeholder="Выберите аватар"
             prepend-icon="mdi-camera"
+            required
           />
 
-          <v-btn @click="createUser" color="primary" class="mt-4" block>
+          <v-btn
+            :disabled="!isFormValid"
+            @click="createUser"
+            color="primary"
+            class="mt-4"
+            block
+          >
             Войти
           </v-btn>
         </v-form>
@@ -77,6 +84,7 @@ import { api } from "../constants/api";
 export default {
   data() {
     return {
+      isFormValid: false,
       email: "",
       password: "",
       name: "",
@@ -84,8 +92,7 @@ export default {
       gender: null,
       age: null,
       profile_image: null,
-      valid: false,
-      errors: {}, // Для хранения ошибок
+
       genderOptions: [
         { text: "Мужской", value: 1 },
         { text: "Женский", value: 2 },
@@ -93,6 +100,16 @@ export default {
       rules: {
         required: (v) => !!v || "Поле обязательно",
         email: (v) => /.+@.+\..+/.test(v) || "Введите корректный email",
+        age: (v) => {
+          return (v >= 18 && v <= 99) || "Возраст должен быть от 18 до 99";
+        },
+        requiredFile: (v) => {
+          if (v.length == 0) {
+            return "Должен содержать файл";
+          } else {
+            return true;
+          }
+        },
       },
       api: api,
     };
@@ -105,26 +122,24 @@ export default {
       }
     },
     async createUser() {
-      if (this.$refs.form.validate()) {
-        const formData = new FormData();
-        formData.append("email", this.email);
-        formData.append("password", this.password);
-        formData.append("name", this.name);
-        formData.append("description", this.description);
-        formData.append("gender", this.gender);
-        formData.append("age", this.age);
-        formData.append("profile_image", this.profile_image);
+      const formData = new FormData();
+      formData.append("email", this.email);
+      formData.append("password", this.password);
+      formData.append("name", this.name);
+      formData.append("description", this.description);
+      formData.append("gender", this.gender);
+      formData.append("age", this.age);
+      formData.append("profile_image", this.profile_image);
 
-        try {
-          const response = await fetch(`${this.api}/UserCreate/`, {
-            method: "POST",
-            body: formData,
-          });
-          const data = await response.json();
-          console.log("Ответ сервера:", data);
-        } catch (error) {
-          console.error("Ошибка при создании пользователя:", error);
-        }
+      try {
+        const response = await fetch(`${this.api}/UserCreate/`, {
+          method: "POST",
+          body: formData,
+        });
+        const data = await response.json();
+        console.log("Ответ сервера:", data);
+      } catch (error) {
+        console.error("Ошибка при создании пользователя:", error);
       }
     },
   },
