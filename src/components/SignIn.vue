@@ -100,8 +100,5 @@ export default {
 </script>
 
 <style scoped>
-.v-card-title {
-  font-weight: bold;
-  font-size: 24px;
-}
+
 </style>
