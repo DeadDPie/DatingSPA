@@ -57,9 +57,8 @@ export default {
   setup() {
     const sidebar = ref(false);
     const authStore = useAuthStore();
-
     const token = computed(() => authStore.token);
-    console.log(token.value);
+
     const menuItems = computed(() => [
       { title: "Home", path: "/", icon: "mdi-home" },
       { title: "About", path: "/about", icon: "mdi-information" },
@@ -71,6 +70,11 @@ export default {
         path: "/signin",
         icon: token.value ? "mdi-logout" : "mdi-login",
       },
+      ...(token.value ? [] : [{
+        title: "Sign Up",
+        path: "/signup",
+        icon: "mdi-account-plus",
+      }]),
     ]);
 
     return {
