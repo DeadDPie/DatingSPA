@@ -49,6 +49,7 @@
 </template>
 
 <script>
+//const isLoggedIn = inject("isLoggedIn", ref(false));
 export default {
   data() {
     return {
@@ -79,8 +80,5 @@ export default {
 </script>
 
 <style scoped>
-.v-card-title {
-  font-weight: bold;
-  font-size: 24px;
-}
+
 </style>

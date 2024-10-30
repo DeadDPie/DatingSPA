@@ -50,20 +50,34 @@
 </template>
 
 <script>
+import { computed, ref } from "vue";
+import { useAuthStore } from "./stores/auth.js";
+
 export default {
-  data() {
+  setup() {
+    const sidebar = ref(false);
+    const authStore = useAuthStore();
+
+    const token = computed(() => authStore.token);
+    console.log(token.value);
+    const menuItems = computed(() => [
+      { title: "Home", path: "/", icon: "mdi-home" },
+      { title: "About", path: "/about", icon: "mdi-information" },
+      { title: "Discover", path: "/discover", icon: "mdi-heart" },
+      { title: "Profile", path: "/profile", icon: "mdi-account" },
+      { title: "Chat", path: "/chat", icon: "mdi-chat" },
+      {
+        title: token.value ? "Log Out" : "Log In",
+        path: "/signin",
+        icon: token.value ? "mdi-logout" : "mdi-login",
+      },
+    ]);
+
     return {
       appTitle: "Awesome App",
-      sidebar: false, // Контроль боковой панели
-      menuItems: [
-        { title: "Home", path: "/", icon: "mdi-home" },
-        { title: "About", path: "/about", icon: "mdi-information" },
-        { title: "Discover", path: "/discover", icon: "mdi-heart" },
-        { title: "Profile", path: "/profile", icon: "mdi-account" },
-        { title: "Chat", path: "/chat", icon: "mdi-chat" },
-        { title: "Sign Up", path: "/signup", icon: "mdi-account-plus" },
-        { title: "Sign In", path: "/signin", icon: "mdi-login" },
-      ],
+      sidebar,
+      menuItems,
+
     };
   },
 };
@@ -76,7 +90,4 @@ export default {
   cursor: pointer;
 }
 
-.v-btn {
-  margin-left: 10px;
-}
 </style>
