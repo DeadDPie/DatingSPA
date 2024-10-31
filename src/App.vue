@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, provide, ref, watch } from "vue";
 import { useAuthStore } from "./stores/auth.js";
 
 export default {
@@ -58,6 +58,11 @@ export default {
     const sidebar = ref(false);
     const authStore = useAuthStore();
     const token = computed(() => authStore.token);
+    const isLoggedIn = ref(!!token.value);
+    watch(token, (newValue) => {
+      isLoggedIn.value = !!newValue;
+    });
+    provide("isLoggedIn", isLoggedIn);
 
     const menuItems = computed(() => [
       { title: "Home", path: "/", icon: "mdi-home" },

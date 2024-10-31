@@ -1,6 +1,6 @@
 <template>
   <v-container class="d-flex justify-center">
-    <v-card max-width="600" class="pa-5">
+    <v-card v-if="isLoggedIn" class="pa-5">
       <v-card-title>Личный кабинет</v-card-title>
 
       <v-card-text>
@@ -45,11 +45,25 @@
         </v-form>
       </v-card-text>
     </v-card>
+    <v-card v-else max-width="600" class="pa-5">
+      <v-card-title>Войдите в аккаунт</v-card-title>
+      <v-card-text>
+        <v-btn
+          @click="goToLogin"
+          color="success"
+          class="mt-4"
+          block
+        >
+          Войти
+        </v-btn>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
 <script>
-//const isLoggedIn = inject("isLoggedIn", ref(false));
+import { inject } from "vue";
+
 export default {
   data() {
     return {
@@ -58,6 +72,7 @@ export default {
       email: "ivan@example.com",
       bio: "Я разработчик из России, увлекаюсь программированием и спортом.",
       valid: false,
+      isLoggedIn: inject("isLoggedIn"),
       rules: {
         required: (v) => !!v || "Поле обязательно",
         email: (v) => /.+@.+\..+/.test(v) || "Введите корректный email",
@@ -66,14 +81,16 @@ export default {
   },
   methods: {
     uploadAvatar() {
-      // Логика загрузки аватара (может быть окно выбора файла)
       alert("Функция загрузки аватара пока не реализована");
+      console.log(this.isLoggedIn);
     },
     saveProfile() {
       if (this.$refs.form.validate()) {
-        // Логика сохранения данных профиля
         alert("Профиль сохранен!");
       }
+    },
+    goToLogin() {
+      this.$router.push("/signin");
     },
   },
 };
