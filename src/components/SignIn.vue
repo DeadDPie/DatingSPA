@@ -4,7 +4,6 @@
       <v-card-title class="text-center">Вы вошли в систему</v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-
           <v-btn
             @click="logout"
             color="primary"
@@ -18,7 +17,6 @@
     </v-card>
     <v-card v-else class="pa-5" width="600" max-width="100%">
       <v-card-title class="text-center">Вход в систему</v-card-title>
-
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
@@ -37,7 +35,6 @@
             type="password"
             required
           />
-
           <v-btn
             :disabled="!valid"
             @click="login"
@@ -56,16 +53,16 @@
 <script>
 import { useAuthStore } from "../stores/auth";
 import { computed, ref } from "vue";
+import { api } from "../constants/api";
+
 
 export default {
   setup() {
     const authStore = useAuthStore();
-
     const valid = ref(false);
     const form = ref(null);
     const email = ref("");
     const password = ref("");
-
     const token = computed(() => authStore.token);
 
     const rules = {
@@ -73,12 +70,34 @@ export default {
       email: (value) => /.+@.+\..+/.test(value) || "Некорректный email",
     };
 
-    function login() {
+    async function login() {
       if (form.value && form.value.validate()) {
-        // Имитация успешной авторизации
-        const fakeToken = "abc123";
-        authStore.setToken(fakeToken);
+        const formData = new FormData();
+        formData.append("email", email.value);
+        formData.append("password", password.value);
+        try {
+          const response = await fetch(`${api}token/`, {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          console.log("Ответ сервера:", data);
 
+          if (response.ok) {
+
+            authStore.setToken(data.access); // Предполагается, что токен возвращается в поле `token`
+            alert("Вы вошли успешно!");
+            // Перенаправляем на страницу после успешного входа
+            // Если `this.$router.push` не работает, используйте `this.$router.replace`
+            this.$router.push("/profile");
+          } else {
+            console.error("Ошибка сервера:", data);
+            alert(data.email ? data.email[0] : "Ошибка при входе. Попробуйте снова.");
+          }
+        } catch (error) {
+          console.error("Ошибка при входе:", error);
+          alert("Ошибка при входе: Попробуйте снова");
+        }
       }
     }
 
@@ -101,5 +120,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

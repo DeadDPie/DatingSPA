@@ -93,6 +93,9 @@ export default {
       this.$router.push("/signin");
     },
   },
+  // const token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNjU0MjM1LCJpYXQiOjE3MzA2NTA2MzUsImp0aSI6ImNlNzcwYmQ0ODQ3ZDRkMzFhOTJjMzI2ZGNkMmRlNmVkIiwidXNlcl9pZCI6ImZhMzE4YWJhLTc3NWQtNGE4MS05NzJkLTEyMGRkNTYwNWJhYiJ9.B1FSAYvVPWk5b2cmTXkK6QqJOVsJdv1sT5yQqUsomy8";
+  // console.log(JSON.parse(atob(token2.split(".")[1])),
+  // );
 };
 </script>
 

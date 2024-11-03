@@ -22,44 +22,11 @@
             required
           />
           <v-text-field
-            v-model="name"
+            v-model="password2"
             :rules="[rules.required]"
-            label="Имя"
-            type="text"
-            required
-          />
-          <v-textarea
-            v-model="description"
-            :rules="[rules.required]"
-            label="Описание"
-            type="textarea"
-            required
-          />
-          <v-text-field
-            v-model="age"
-            :rules="[rules.required, rules.age]"
-            label="Возраст"
-            type="text"
-            inputmode="numeric"
-            @keypress="onlyNumbers"
-            required
-          />
-          <v-select
-            v-model="gender"
-            :items="this.genderOptions"
-            item-title="text"
-            item-value="value"
-            label="Пол"
-            :rules="[rules.required]"
-            required
-          />
-
-          <v-file-input
-            v-model="profile_image"
-            :rules="[rules.required, rules.requiredFile]"
-            label="Изображение профиля"
-            placeholder="Выберите аватар"
-            prepend-icon="mdi-camera"
+            label="Повторите пароль"
+            prepend-icon="mdi-lock"
+            type="password"
             required
           />
 
@@ -87,6 +54,7 @@ export default {
       isFormValid: false,
       email: "",
       password: "",
+      password2: "",
       name: "",
       description: "",
       gender: null,
@@ -99,47 +67,52 @@ export default {
       ],
       rules: {
         required: (v) => !!v || "Поле обязательно",
-        email: (v) => /.+@.+\..+/.test(v) || "Введите корректный email",
-        age: (v) => {
-          return (v >= 18 && v <= 99) || "Возраст должен быть от 18 до 99";
-        },
-        requiredFile: (v) => {
-          if (v.length == 0) {
-            return "Должен содержать файл";
-          } else {
-            return true;
-          }
-        },
+        email: (v) =>
+          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(v) || "Введите корректный email",
+        // age: (v) => {
+        //   return (v >= 18 && v <= 99) || "Возраст должен быть от 18 до 99";
+        // },
+        // requiredFile: (v) => {
+        //   if (v.length == 0) {
+        //     return "Должен содержать файл";
+        //   } else {
+        //     return true;
+        //   }
+        // },
       },
       api: api,
     };
   },
   methods: {
-    onlyNumbers(e) {
-      const char = String.fromCharCode(e.keyCode);
-      if (!/[0-9]/.test(char)) {
-        e.preventDefault();
-      }
-    },
+    // onlyNumbers(e) {
+    //   const char = String.fromCharCode(e.keyCode);
+    //   if (!/[0-9]/.test(char)) {
+    //     e.preventDefault();
+    //   }
+    // },
     async createUser() {
       const formData = new FormData();
       formData.append("email", this.email);
       formData.append("password", this.password);
-      formData.append("name", this.name);
-      formData.append("description", this.description);
-      formData.append("gender", this.gender);
-      formData.append("age", this.age);
-      formData.append("profile_image", this.profile_image);
+      formData.append("password2", this.password2);
+      // formData.append("name", this.name);
+      // formData.append("description", this.description);
+      // formData.append("gender", this.gender);
+      // formData.append("age", this.age);
+      // formData.append("profile_image", this.profile_image);
 
       try {
-        const response = await fetch(`${this.api}/UserCreate/`, {
+        const response = await fetch(`${this.api}UserRegistration/`, {
           method: "POST",
           body: formData,
         });
         const data = await response.json();
         console.log("Ответ сервера:", data);
+        alert("Зарегистрирован успешно!"); // или используем любую систему уведомлений
+        this.$router.push("/signin");
       } catch (error) {
         console.error("Ошибка при создании пользователя:", error);
+        alert("Ошибка при создании пользователя: Попробуйте снова");
       }
     },
   },
@@ -152,3 +125,46 @@ export default {
   font-size: 24px;
 }
 </style>
+
+<!--
+<v-text-field
+  v-model="name"
+  :rules="[rules.required]"
+  label="Имя"
+  type="text"
+  required
+/>
+<v-textarea
+  v-model="description"
+  :rules="[rules.required]"
+  label="Описание"
+  type="textarea"
+  required
+/>
+<v-text-field
+  v-model="age"
+  :rules="[rules.required, rules.age]"
+  label="Возраст"
+  type="text"
+  inputmode="numeric"
+  @keypress="onlyNumbers"
+  required
+/>
+<v-select
+  v-model="gender"
+  :items="this.genderOptions"
+  item-title="text"
+  item-value="value"
+  label="Пол"
+  :rules="[rules.required]"
+  required
+/>
+
+<v-file-input
+  v-model="profile_image"
+  :rules="[rules.required, rules.requiredFile]"
+  label="Изображение профиля"
+  placeholder="Выберите аватар"
+  prepend-icon="mdi-camera"
+  required
+/>-->
