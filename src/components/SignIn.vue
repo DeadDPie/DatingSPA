@@ -91,6 +91,7 @@ export default {
             // Перенаправляем на страницу после успешного входа
             // Если `this.$router.push` не работает, используйте `this.$router.replace`
             //this.$router.push("/profile");
+            this.$router.replace("/profile");
           } else {
             console.error("Ошибка сервера:", data);
             alert(data.email ? data.email[0] : "Ошибка при входе. Попробуйте снова.");

@@ -9,15 +9,17 @@
             cover
           >
             <v-card-title
-              >{{ currentProfile.name }}, {{ currentProfile.age }}
-            </v-card-title></v-img
+            >{{ currentProfile.first_name }} {{ currentProfile.last_name }}, {{ currentProfile.age }}
+            </v-card-title>
+          </v-img
           >
           <v-card-subtitle class="pt-4">
             {{ getGender(currentProfile.gender) }}
           </v-card-subtitle>
           <v-card-text style="text-align: left">{{
-            currentProfile.description
-          }}</v-card-text>
+              currentProfile.description
+            }}
+          </v-card-text>
           <v-card-actions class="d-flex justify-center">
             <v-btn color="error" @click="dislike" outlined rounded>
               <v-icon left>mdi-close</v-icon>
@@ -36,61 +38,85 @@
     </v-row>
   </v-container>
 </template>
-
 <script>
+import { computed, onMounted, ref } from "vue";
 import { api } from "../constants/api";
+import { useAuthStore } from "../stores/auth.js";
+
 export default {
-  data() {
-    return {
-      profileList: [],
-      currentProfile: null,
-      currentProfileIndex: 0,
-      api: api,
-      noMoreUsers: false,
-    };
-  },
-  methods: {
-    getGender(gender) {
+  setup() {
+    const authStore = useAuthStore();
+    const profileList = ref([]);
+    const currentProfile = ref(null);
+    const currentProfileIndex = ref(0);
+    const noMoreUsers = ref(false);
+
+    const token = computed(() => authStore.token);
+
+    function getGender(gender) {
       return gender === 1 ? "Мужской" : gender === 2 ? "Женский" : "Не указано";
-    },
-    like() {
-      this.currentProfileIndex += 1;
-      this.currentProfile = this.profileList[this.currentProfileIndex];
-      if (this.currentProfileIndex >= this.profileList.length) {
-        this.noMoreUsers = true;
+    }
+
+    function like() {
+      currentProfileIndex.value += 1;
+      if (currentProfileIndex.value < profileList.value.length) {
+        currentProfile.value = profileList.value[currentProfileIndex.value];
+      } else {
+        noMoreUsers.value = true;
+        currentProfile.value = null;
       }
-    },
-    dislike() {
-      this.currentProfileIndex += 1;
-      this.currentProfile = this.profileList[this.currentProfileIndex];
-      if (this.currentProfileIndex >= this.profileList.length) {
-        this.noMoreUsers = true;
+    }
+
+    function dislike() {
+      currentProfileIndex.value += 1;
+      if (currentProfileIndex.value < profileList.value.length) {
+        currentProfile.value = profileList.value[currentProfileIndex.value];
+      } else {
+        noMoreUsers.value = true;
+        currentProfile.value = null;
       }
-    },
-    async fetchUsers() {
+    }
+
+    async function fetchUsers() {
       try {
-        const response = await fetch(`${this.api}/UserList/`);
+        const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
+        const response = await fetch(`${api}UserList/`);
         const data = await response.json();
-        this.profileList = data;
-        if (this.profileList.length > 0) {
-          this.currentProfile = this.profileList[0];
+        profileList.value = data.filter(user => user.id !== userId);
+        if (profileList.value.length > 0) {
+          currentProfile.value = profileList.value[0];
+        } else {
+          noMoreUsers.value = true; // Уведомление, если нет пользователей
         }
         console.log(data);
       } catch (error) {
         console.error("Ошибка при получении пользователей:", error);
       }
-    },
-  },
-  mounted() {
-    this.fetchUsers();
+    }
+
+    onMounted(() => {
+      fetchUsers();
+    });
+
+    return {
+      profileList,
+      currentProfile,
+      currentProfileIndex,
+      noMoreUsers,
+      getGender,
+      like,
+      dislike,
+    };
   },
 };
 </script>
+
 
 <style scoped>
 .v-card {
   height: max-content;
 }
+
 .gradient-btn {
   color: white;
   border-radius: 24px;
