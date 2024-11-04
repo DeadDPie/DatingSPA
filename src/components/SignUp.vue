@@ -167,4 +167,13 @@ export default {
   placeholder="Выберите аватар"
   prepend-icon="mdi-camera"
   required
-/>-->
+
+
+/>
+
+          <v-text-field
+            v-model="gender"
+            label="Пол"
+            prepend-icon="mdi-gender-male-female"
+          />
+          -->

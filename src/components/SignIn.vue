@@ -65,6 +65,7 @@ export default {
     const password = ref("");
     const token = computed(() => authStore.token);
 
+
     const rules = {
       required: (value) => !!value || "Обязательное поле",
       email: (value) => /.+@.+\..+/.test(value) || "Некорректный email",
@@ -89,7 +90,7 @@ export default {
             alert("Вы вошли успешно!");
             // Перенаправляем на страницу после успешного входа
             // Если `this.$router.push` не работает, используйте `this.$router.replace`
-            this.$router.push("/profile");
+            //this.$router.push("/profile");
           } else {
             console.error("Ошибка сервера:", data);
             alert(data.email ? data.email[0] : "Ошибка при входе. Попробуйте снова.");
