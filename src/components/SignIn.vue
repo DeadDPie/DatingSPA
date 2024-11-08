@@ -4,12 +4,7 @@
       <v-card-title class="text-center">Вы вошли в систему</v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-btn
-            @click="logout"
-            color="primary"
-            class="mt-4"
-            block
-          >
+          <v-btn @click="logout" color="primary" class="mt-4" block>
             Выйти
           </v-btn>
         </v-form>
@@ -54,17 +49,18 @@
 import { useAuthStore } from "../stores/auth";
 import { computed, ref } from "vue";
 import { api } from "../constants/api";
-
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
+    const router = useRouter();
+
     const authStore = useAuthStore();
     const valid = ref(false);
     const form = ref(null);
     const email = ref("");
     const password = ref("");
     const token = computed(() => authStore.token);
-
 
     const rules = {
       required: (value) => !!value || "Обязательное поле",
@@ -85,16 +81,14 @@ export default {
           console.log("Ответ сервера:", data);
 
           if (response.ok) {
-
             authStore.setToken(data.access); // Предполагается, что токен возвращается в поле `token`
             alert("Вы вошли успешно!");
-            // Перенаправляем на страницу после успешного входа
-            // Если `this.$router.push` не работает, используйте `this.$router.replace`
-            //this.$router.push("/profile");
-            this.$router.replace("/profile");
+            router.push("/profile");
           } else {
             console.error("Ошибка сервера:", data);
-            alert(data.email ? data.email[0] : "Ошибка при входе. Попробуйте снова.");
+            alert(
+              data.email ? data.email[0] : "Ошибка при входе. Попробуйте снова."
+            );
           }
         } catch (error) {
           console.error("Ошибка при входе:", error);
@@ -121,5 +115,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
