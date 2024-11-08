@@ -1,4 +1,13 @@
 <template>
+  <v-btn
+    v-if="isLoggedIn"
+    color="gray"
+    class="m-4"
+    block
+    @click="deleteAccount"
+  >
+    Удалить аккаунт
+  </v-btn>
   <v-container class="d-flex justify-center pa-5">
     <v-card v-if="isLoggedIn" class="pa-5" width="100%" max-width="600px">
       <v-card-title v-if="first_name" text-align="center"
@@ -114,9 +123,12 @@
 import { computed, inject, onMounted, ref } from "vue";
 import { api } from "../constants/api";
 import { useAuthStore } from "../stores/auth";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
+    const router = useRouter();
+
     const genderOptions = [
       { text: "Мужской", value: 1 },
       { text: "Женский", value: 2 },
@@ -237,6 +249,37 @@ export default {
         }
       }
     }
+    async function deleteAccount() {
+      const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
+
+      if (
+        confirm(
+          "Вы уверены, что хотите удалить свой аккаунт? Это действие необратимо."
+        )
+      ) {
+        try {
+          const response = await fetch(`${api}UserDelete/${userId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token.value}`,
+            },
+          });
+
+          if (response.ok) {
+            alert("Аккаунт успешно удален.");
+            authStore.clearTokens();
+            router.push("/signup");
+          } else {
+            const data = await response.json();
+            console.error("Ошибка при удалении аккаунта:", data);
+            alert(data.detail || "Ошибка при удалении аккаунта.");
+          }
+        } catch (error) {
+          console.error("Ошибка при удалении аккаунта:", error);
+          alert("Ошибка при удалении аккаунта.");
+        }
+      }
+    }
 
     function goToLogin() {
       this.$router.push("/signin");
@@ -265,6 +308,7 @@ export default {
       handleFileUpload,
       saveProfile,
       goToLogin,
+      deleteAccount,
     };
   },
 };

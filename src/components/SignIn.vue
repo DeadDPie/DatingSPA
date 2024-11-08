@@ -50,7 +50,7 @@ import { useAuthStore } from "../stores/auth";
 import { computed, ref } from "vue";
 import { api } from "../constants/api";
 import { useRouter } from "vue-router";
-import {scheduleTokenRefresh} from "../service/authService"
+import { scheduleTokenRefresh } from "../service/authService";
 
 export default {
   setup() {
@@ -83,14 +83,16 @@ export default {
 
           if (response.ok) {
             authStore.setTokens({
-          accessToken: data.access,
-          refreshToken: data.refresh,
-        });
+              accessToken: data.access,
+              refreshToken: data.refresh,
+            });
             alert("Вы вошли успешно!");
-        //    const expiryTime = JSON.parse(atob(token.value.split(".")[1])).exp - JSON.parse(atob(token.value.split(".")[1])).iat;
-        const expiryTime = 10;    
-        scheduleTokenRefresh(expiryTime);
-            //router.push("/profile");
+            const expiryTime =
+              JSON.parse(atob(token.value.split(".")[1])).exp -
+              JSON.parse(atob(token.value.split(".")[1])).iat;
+            //const expiryTime = 10;
+            scheduleTokenRefresh(expiryTime);
+            router.push("/profile");
           } else {
             console.error("Ошибка сервера:", data);
             alert(
@@ -105,7 +107,7 @@ export default {
     }
 
     function logout() {
-      authStore.clearToken();
+      authStore.clearTokens();
     }
 
     return {
