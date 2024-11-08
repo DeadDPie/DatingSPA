@@ -1,7 +1,12 @@
 <template>
   <v-container class="d-flex justify-center pa-5">
     <v-card v-if="isLoggedIn" class="pa-5" width="100%" max-width="600px">
-      <v-card-title text-align="center">Личный кабинет</v-card-title>
+      <v-card-title v-if="first_name" text-align="center"
+        >Личный кабинет</v-card-title
+      >
+      <v-card-title v-else text-align="center"
+        >Заполните данные о себе</v-card-title
+      >
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <div class="avatar-container mx-auto mb-4">
@@ -14,7 +19,14 @@
               <v-icon
                 color="primary"
                 @click="triggerFileInput"
-                style="bottom: -10px; right: -10px; cursor: pointer; background: white; border-radius: 50%; padding: 4px;"
+                style="
+                  bottom: -10px;
+                  right: -10px;
+                  cursor: pointer;
+                  background: white;
+                  border-radius: 50%;
+                  padding: 4px;
+                "
               >
                 mdi-upload
               </v-icon>
@@ -43,7 +55,7 @@
           />
           <v-text-field
             v-model="age"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.age]"
             label="Возраст"
             prepend-icon="mdi-calendar"
             type="number"
@@ -56,6 +68,7 @@
             prepend-icon="mdi-email"
             type="email"
             required
+            readonly
           />
           <v-select
             v-model="gender"
@@ -109,7 +122,7 @@ export default {
       { text: "Женский", value: 2 },
     ];
     const authStore = useAuthStore();
-    const token = computed(() => authStore.token);
+    const token = computed(() => authStore.accessToken);
     const isLoggedIn = inject("isLoggedIn");
 
     const profile_image = ref("");
@@ -125,6 +138,7 @@ export default {
     const rules = {
       required: (v) => !!v || "Поле обязательно",
       email: (v) => /.+@.+\..+/.test(v) || "Введите корректный email",
+      age: (v) => v > 18 || "Возраст должен быт больше 18",
     };
 
     async function getUserData() {

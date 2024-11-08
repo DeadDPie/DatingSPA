@@ -50,6 +50,7 @@ import { useAuthStore } from "../stores/auth";
 import { computed, ref } from "vue";
 import { api } from "../constants/api";
 import { useRouter } from "vue-router";
+import {scheduleTokenRefresh} from "../service/authService"
 
 export default {
   setup() {
@@ -60,7 +61,7 @@ export default {
     const form = ref(null);
     const email = ref("");
     const password = ref("");
-    const token = computed(() => authStore.token);
+    const token = computed(() => authStore.accessToken);
 
     const rules = {
       required: (value) => !!value || "Обязательное поле",
@@ -81,9 +82,15 @@ export default {
           console.log("Ответ сервера:", data);
 
           if (response.ok) {
-            authStore.setToken(data.access); // Предполагается, что токен возвращается в поле `token`
+            authStore.setTokens({
+          accessToken: data.access,
+          refreshToken: data.refresh,
+        });
             alert("Вы вошли успешно!");
-            router.push("/profile");
+        //    const expiryTime = JSON.parse(atob(token.value.split(".")[1])).exp - JSON.parse(atob(token.value.split(".")[1])).iat;
+        const expiryTime = 10;    
+        scheduleTokenRefresh(expiryTime);
+            //router.push("/profile");
           } else {
             console.error("Ошибка сервера:", data);
             alert(

@@ -57,7 +57,7 @@ export default {
   setup() {
     const sidebar = ref(false);
     const authStore = useAuthStore();
-    const token = computed(() => authStore.token);
+    const token = computed(() => authStore.accessToken);
     const isLoggedIn = ref(!!token.value);
     watch(token, (newValue) => {
       isLoggedIn.value = !!newValue;

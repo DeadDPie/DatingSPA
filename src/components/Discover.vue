@@ -51,7 +51,7 @@ export default {
     const currentProfileIndex = ref(0);
     const noMoreUsers = ref(false);
 
-    const token = computed(() => authStore.token);
+    const token = computed(() => authStore.accessToken);
 
     function getGender(gender) {
       return gender === 1 ? "Мужской" : gender === 2 ? "Женский" : "Не указано";
