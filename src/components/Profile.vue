@@ -145,7 +145,7 @@ export default {
     const gender = ref(null);
     const description = ref("");
     const valid = ref(false);
-    const fileInput = ref(null); // для ссылки на элемент загрузки файла
+    const fileInput = ref(null); 
 
     const rules = {
       required: (v) => !!v || "Поле обязательно",

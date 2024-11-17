@@ -86,7 +86,7 @@ export default {
         if (profileList.value.length > 0) {
           currentProfile.value = profileList.value[0];
         } else {
-          noMoreUsers.value = true; // Уведомление, если нет пользователей
+          noMoreUsers.value = true; 
         }
         console.log(data);
       } catch (error) {
