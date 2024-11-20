@@ -42,6 +42,7 @@
 import { computed, onMounted, ref } from "vue";
 import { api } from "../constants/api";
 import { useAuthStore } from "../stores/auth.js";
+import { authFetch } from "../service/authService";
 
 export default {
   setup() {
@@ -80,7 +81,7 @@ export default {
     async function fetchUsers() {
       try {
         const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
-        const response = await fetch(`${api}UserList/`);
+        const response = await authFetch(`${api}UserList/`);
         const data = await response.json();
         profileList.value = data.filter(user => user.id !== userId);
         if (profileList.value.length > 0) {

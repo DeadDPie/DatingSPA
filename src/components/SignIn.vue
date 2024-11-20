@@ -3,11 +3,17 @@
     <v-card v-if="token" class="pa-5" width="600" max-width="100%">
       <v-card-title class="text-center">Вы вошли в систему</v-card-title>
       <v-card-text>
-        <v-form ref="form" v-model="valid" lazy-validation>
-          <v-btn @click="logout" color="primary" class="mt-4" block>
-            Выйти
-          </v-btn>
-        </v-form>
+        <v-btn
+          @click="$router.push('/about')"
+          color="primary"
+          class="mt-4"
+          block
+        >
+          Перейти к лайкам
+        </v-btn>
+        <v-btn @click="logout" color="secondary" class="mt-4" block>
+          Выйти
+        </v-btn>
       </v-card-text>
     </v-card>
     <v-card v-else class="pa-5" width="600" max-width="100%">
@@ -50,13 +56,16 @@ import { useAuthStore } from "../stores/auth";
 import { computed, ref } from "vue";
 import { api } from "../constants/api";
 import { useRouter } from "vue-router";
-import { scheduleTokenRefresh } from "../service/authService";
+import { authFetch } from "../service/authService";
+import { useWebSocket } from "../service/websocket";
 
 export default {
   setup() {
     const router = useRouter();
 
     const authStore = useAuthStore();
+    const { connectToWebSocket } = useWebSocket();
+
     const valid = ref(false);
     const form = ref(null);
     const email = ref("");
@@ -74,7 +83,7 @@ export default {
         formData.append("email", email.value);
         formData.append("password", password.value);
         try {
-          const response = await fetch(`${api}token/`, {
+          const response = await authFetch(`${api}token/`, {
             method: "POST",
             body: formData,
           });
@@ -87,11 +96,8 @@ export default {
               refreshToken: data.refresh,
             });
             alert("Вы вошли успешно!");
-            const expiryTime =
-              JSON.parse(atob(token.value.split(".")[1])).exp -
-              JSON.parse(atob(token.value.split(".")[1])).iat;
-            //const expiryTime = 10;
-            scheduleTokenRefresh(expiryTime);
+           
+            connectToWebSocket();
             router.push("/profile");
           } else {
             console.error("Ошибка сервера:", data);
@@ -123,5 +129,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

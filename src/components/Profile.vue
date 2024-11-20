@@ -124,6 +124,7 @@ import { computed, inject, onMounted, ref } from "vue";
 import { api } from "../constants/api";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
+import { authFetch } from "../service/authService";
 
 export default {
   setup() {
@@ -156,7 +157,7 @@ export default {
     async function getUserData() {
       try {
         const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
-        const response = await fetch(`${api}UserRetrieve/${userId}`, {
+        const response = await authFetch(`${api}UserRetrieve/${userId}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token.value}`,
@@ -193,7 +194,7 @@ export default {
 
         try {
           const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
-          const response = await fetch(`${api}UserUpdate/${userId}/`, {
+          const response = await authFetch(`${api}UserUpdate/${userId}/`, {
             method: "PATCH",
             headers: {
               Authorization: `Bearer ${token.value}`,
@@ -220,7 +221,7 @@ export default {
       if (valid.value) {
         try {
           const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
-          const response = await fetch(`${api}UserUpdate/${userId}/`, {
+          const response = await authFetch(`${api}UserUpdate/${userId}/`, {
             method: "PATCH",
             headers: {
               Authorization: `Bearer ${token.value}`,
@@ -258,7 +259,7 @@ export default {
         )
       ) {
         try {
-          const response = await fetch(`${api}UserDelete/${userId}`, {
+          const response = await authFetch(`${api}UserDelete/${userId}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${token.value}`,

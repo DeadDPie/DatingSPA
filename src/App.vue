@@ -66,10 +66,10 @@ export default {
 
     const menuItems = computed(() => [
       { title: "Home", path: "/", icon: "mdi-home" },
-      { title: "About", path: "/about", icon: "mdi-information" },
+      { title: "Likes", path: "/about", icon: "mdi-information" },
       { title: "Discover", path: "/discover", icon: "mdi-heart" },
       { title: "Profile", path: "/profile", icon: "mdi-account" },
-      { title: "Chat", path: "/chat", icon: "mdi-chat" },
+      //{ title: "Chat", path: "/chat", icon: "mdi-chat" },
       {
         title: token.value ? "Log Out" : "Log In",
         path: "/signin",
