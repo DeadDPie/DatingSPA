@@ -9,16 +9,15 @@
             cover
           >
             <v-card-title
-            >{{ currentProfile.first_name }} {{ currentProfile.last_name }}, {{ currentProfile.age }}
+              >{{ currentProfile.first_name }} {{ currentProfile.last_name }},
+              {{ currentProfile.age }}
             </v-card-title>
-          </v-img
-          >
+          </v-img>
           <v-card-subtitle class="pt-4">
             {{ getGender(currentProfile.gender) }}
           </v-card-subtitle>
-          <v-card-text style="text-align: left">{{
-              currentProfile.description
-            }}
+          <v-card-text style="text-align: left"
+            >{{ currentProfile.description }}
           </v-card-text>
           <v-card-actions class="d-flex justify-center">
             <v-btn color="error" @click="dislike" outlined rounded>
@@ -58,7 +57,33 @@ export default {
       return gender === 1 ? "Мужской" : gender === 2 ? "Женский" : "Не указано";
     }
 
-    function like() {
+    async function like() {
+      if (!currentProfile.value) return;
+
+      const likedUserId = currentProfile.value.id; // Получаем ID текущего профиля
+      try {
+        const response = await fetch(`${api}UserLike/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.value}`, // Передаём токен в заголовках
+          },
+          body: JSON.stringify({ liked_user_id: likedUserId }), // Тело запроса
+        });
+
+        if (response.ok) {
+          console.log(`Вы успешно лайкнули пользователя с ID: ${likedUserId}`);
+        } else {
+          const error = await response.json();
+          console.error(
+            `Ошибка при отправке лайка: ${error.detail || response.statusText}`
+          );
+        }
+      } catch (error) {
+        console.error("Ошибка сети или запроса при лайке:", error);
+      }
+
+      // Переключаемся на следующий профиль
       currentProfileIndex.value += 1;
       if (currentProfileIndex.value < profileList.value.length) {
         currentProfile.value = profileList.value[currentProfileIndex.value];
@@ -83,11 +108,11 @@ export default {
         const userId = JSON.parse(atob(token.value.split(".")[1])).user_id;
         const response = await authFetch(`${api}UserList/`);
         const data = await response.json();
-        profileList.value = data.filter(user => user.id !== userId);
+        profileList.value = data.filter((user) => user.id !== userId);
         if (profileList.value.length > 0) {
           currentProfile.value = profileList.value[0];
         } else {
-          noMoreUsers.value = true; 
+          noMoreUsers.value = true;
         }
         console.log(data);
       } catch (error) {
@@ -111,7 +136,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .v-card {
