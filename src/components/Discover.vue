@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8">
-        <v-card v-if="currentProfile & !noMoreUsers">
+        <v-card v-if="currentProfile && !noMoreUsers">
           <v-img
             class="align-end text-white"
             :src="currentProfile.profile_image"
