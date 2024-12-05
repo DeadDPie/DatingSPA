@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8">
-        <v-card v-if="currentProfile">
+        <v-card v-if="currentProfile & !noMoreUsers">
           <v-img
             class="align-end text-white"
             :src="currentProfile.profile_image"
@@ -30,7 +30,7 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-        <div v-if="noMoreUsers" class="text-center">
+        <div v-else class="text-center">
           <h3>На сегодня пользователи закончились</h3>
         </div>
       </v-col>
