@@ -1,4 +1,12 @@
 # Vue 3 + Vite
+
+-  "axios": "^1.7.7"
+-  "pinia": "^2.2.6"
+-  "vue-router": "^4.4.5"
+-  "vuetify": "^3.7.2"
+-  "material-design-icons-iconfont": "^6.7.0"
+   
+   
 ![image](https://github.com/user-attachments/assets/5e14ba2a-584e-4f07-8d9e-c212c8454d54)
 ![image](https://github.com/user-attachments/assets/cef490b9-0184-4e91-a921-b1d48649f765)
 
